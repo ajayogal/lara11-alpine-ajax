@@ -5,8 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    sleep(2);
-    $todos = Todo::all();
+    // sleep(2);
+    $todos = Todo::orderByDesc('id')->get();
     return view('welcome', [
         'todos' => $todos
     ]);
@@ -15,7 +15,11 @@ Route::get('/', function () {
 
 Route::post('/todo', function(Request $request){
 
-    $todo_title = $request->input("title");
+    $request->validate([
+        'todo_title' => 'required|min:4'
+    ]);
+
+    $todo_title = $request->input("todo_title");
 
     Todo::create([
         'title' => $todo_title
